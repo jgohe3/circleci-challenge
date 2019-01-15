@@ -9,42 +9,7 @@ To test simple UI functionality we're using Spring Boot's test starter and Sauce
 
 You can see these simple tests in [HomePagesTests.java](src/test/java/com/edwardawebb/circleci/demo/HomePageTests.java)
 
-## Deploying
 
-This project deploys on two common PaaS providers; Heroku and Pivotal Web Services (Cloud Foundry).
-
-![CircleCI Wofrkflow with multiple parallel deployments](src/main/resources/static/images/workflow.png)
-
-### Heroku
-**This was my first time using Heroku**, and have more experience with Cloud Foundry as an abstracted application PaaS.
-I disliked the idea of Heroku rebuilding deployable from source, being a firm believer in **"Build once, run anywhere."**
-
-Since spring boot creates a self-contained runnable jar, that the tests above validate, it was important to find a non `git push` way to deploy this project in which only the precompiled artifact was passed.
-And in fact the Heroku CLI supports just that with 
-```
-heroku deploy:jar self-contained.jar --app $HEROKU_APP_NAME
-```
-Which can be seen in [config.yml](.circleci/config.yml#68) 
-
-#### Viewing
-
-The latest version should be visible on https://boiling-falls-60288.herokuapp.com
-
-### Cloud Foundry
-One of my favorite features of CF is the **zero-downtime** deployments using [Blue/Green strategy](https://martinfowler.com/bliki/BlueGreenDeployment.html).
-
-1. Push new version of app on a 'dark' URL not used by customers
-1. Validate application health on dark URL
-1. Begin routing customer facing URL to new version
-1. Stop sending customer traffic to old version
-1. Stop and remove previous version
-
-
-![CloudFoundry panel showing blue and green version on unique routes](src/main/resources/static/images/bluegreen.png)
-
-You can see this executed in [config.yml](.circleci/config.yml#L107) 
-
-#### Viewing
 And live app visible on https://circleci-challenge.cfapps.io/
 
 
